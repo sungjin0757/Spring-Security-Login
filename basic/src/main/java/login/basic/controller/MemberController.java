@@ -5,18 +5,76 @@ import login.basic.dto.LoginFormDto;
 import login.basic.dto.SignupFormDto;
 import login.basic.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping("/test")
+    @ResponseBody
+    public Member testV1(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        Member member = memberService.findByEmail(principal.getUsername());
+
+        return member;
+    }
+
+//    @ResponseBody
+//    @GetMapping("/test/login")
+    public String loginTest(Authentication authentication){
+        log.info(authentication.getPrincipal().toString());
+
+        User user=(User)authentication.getPrincipal();
+        Member member = memberService.findByEmail(user.getUsername());
+
+        return member.getName();
+    }
+
+    @ResponseBody
+    @GetMapping("/test/login")
+    public String loginTestV3(@AuthenticationPrincipal UserDetails user){
+
+        Member member = memberService.findByEmail(user.getUsername());
+
+        return member.getName();
+    }
+
+//    @GetMapping("/test/oauth")
+    @ResponseBody
+    public String testOauthLogin(Authentication authentication){
+        OAuth2User oAuth2User=(OAuth2User) authentication.getPrincipal();
+
+        log.info(oAuth2User.getAttributes().toString());
+
+        return "oauth";
+
+    }
+
+    @GetMapping("/test/oauth")
+    @ResponseBody
+    public String testOauthLoginV2(@AuthenticationPrincipal OAuth2User oAuth2User){
+        String email = oAuth2User.getAttribute("email");
+
+        log.info(oAuth2User.getAttributes().toString());
+        log.info(email);
+        return "oauth";
+
+    }
+
 
     @GetMapping("/loginForm")
     public String login(Model model){
@@ -40,8 +98,10 @@ public class MemberController {
         member.updateRole("ROLE_USER");
         memberService.join(member);
 
-        return "redirect:/login";
+        return "redirect:/loginForm";
     }
+
+
 
     @GetMapping("user")
     @ResponseBody
