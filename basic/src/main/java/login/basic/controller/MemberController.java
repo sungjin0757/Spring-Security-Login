@@ -2,6 +2,7 @@ package login.basic.controller;
 
 import login.basic.domain.Member;
 import login.basic.dto.LoginFormDto;
+import login.basic.dto.LoginPrincipalDetails;
 import login.basic.dto.SignupFormDto;
 import login.basic.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,22 @@ public class MemberController {
         return "signup";
     }
 
+    @GetMapping("/oauth-join")
+    public String oauthJoinForm(@AuthenticationPrincipal LoginPrincipalDetails details, Model model){
+
+        if(memberService.findByEmail(details.getAttribute("email"))!=null)
+        {
+            return "index";
+        }
+        SignupFormDto signupFormDto = new SignupFormDto();
+        signupFormDto.setEmail(details.getAttribute("email"));
+        signupFormDto.setPassword(details.getAttribute("password"));
+        signupFormDto.setName(details.getAttribute("name"));
+
+        model.addAttribute("signupFormDto", signupFormDto);
+        return "signup";
+    }
+
     @PostMapping("/join")
     public String join(@ModelAttribute SignupFormDto form){
 
@@ -100,7 +117,6 @@ public class MemberController {
 
         return "redirect:/loginForm";
     }
-
 
 
     @GetMapping("user")

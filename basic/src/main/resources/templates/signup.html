@@ -20,12 +20,12 @@
         <h2>회원 가입</h2>
     </div>
     <h4 class="mb-3">회원 정보 입력</h4>
-    <form action="" th:action th:object="${signupFormDto}" method="post">
+    <form action="" th:action="@{/join}" th:object="${signupFormDto}" method="post">
 
         <div>
             <label for="email">로그인 Email</label>
-            <input type="text" id="email" th:field="*{email}"
-                   >
+            <input type="text" id="email" th:field="*{email}" th:readonly="${signupFormDto.email!=null}"
+                  >
 
         </div>
         <div>
@@ -37,7 +37,7 @@
         </div>
         <div>
             <label for="name">이름</label>
-            <input type="text" id="name" th:field="*{name}" class="formcontrol"
+            <input type="text" id="name" th:field="*{name}" class="formcontrol" th:readonly="${signupFormDto.email!=null}"
                   >
 
         </div>

@@ -2,6 +2,7 @@ package login.basic.dto;
 
 import login.basic.domain.Member;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@Data
+@Slf4j
 public class LoginPrincipalDetails implements UserDetails, OAuth2User {
 
     private Member member;
@@ -52,31 +53,34 @@ public class LoginPrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
+        if(member==null)
+            return (String)attributes.get("email");
         return member.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public Map<String, Object> getAttributes() {
         return attributes;
     }
+
 }
