@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -93,6 +94,14 @@ public class MemberController {
 
         model.addAttribute("loginFormDto",new LoginFormDto());
 
+        return "login";
+    }
+
+    @PostMapping("/loginFail")
+    public String loginFail(@RequestParam String errorMsg,Model model,@ModelAttribute LoginFormDto form){
+        log.info(errorMsg);
+        model.addAttribute("loginFailMsg",errorMsg);
+        
         return "login";
     }
 

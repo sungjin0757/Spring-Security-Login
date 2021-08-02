@@ -24,6 +24,10 @@
         <a th:href="@{/oauth2/authorization/google}">구글</a>
     </div>
 
+    <div th:if="${loginFailMsg!=null}">
+        <p  th:text="${loginFailMsg}"></p>
+    </div>
+
     <form action="item.html" th:action="@{/login}" th:object="${loginFormDto}" method="post">
 
         <div>
