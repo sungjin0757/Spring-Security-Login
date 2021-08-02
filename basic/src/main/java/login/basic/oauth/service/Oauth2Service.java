@@ -26,6 +26,7 @@ public class Oauth2Service extends DefaultOAuth2UserService {
         // userRequest Information -> member profile( load user)
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("user Request={}", oAuth2User.getAttributes());  //google user information
+        log.info(userRequest.getClientRegistration().getClientId()); //google
 
         return new LoginPrincipalDetails(oAuth2User.getAttributes());
     }

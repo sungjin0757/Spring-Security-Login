@@ -46,7 +46,7 @@ public class MemberController {
     }
 
     @ResponseBody
-    @GetMapping("/test/login")
+//    @GetMapping("/test/login")
     public String loginTestV3(@AuthenticationPrincipal UserDetails user){
 
         Member member = memberService.findByEmail(user.getUsername());
@@ -65,12 +65,23 @@ public class MemberController {
 
     }
 
-    @GetMapping("/test/oauth")
+//    @GetMapping("/test/oauth")
     @ResponseBody
     public String testOauthLoginV2(@AuthenticationPrincipal OAuth2User oAuth2User){
         String email = oAuth2User.getAttribute("email");
 
         log.info(oAuth2User.getAttributes().toString());
+        log.info(email);
+        return "oauth";
+
+    }
+
+    @GetMapping("/test/login")
+    @ResponseBody
+    public String testLoginFinal(@AuthenticationPrincipal LoginPrincipalDetails user){
+        String email = user.getAttribute("email");
+
+        log.info(user.getAttributes().toString());
         log.info(email);
         return "oauth";
 
