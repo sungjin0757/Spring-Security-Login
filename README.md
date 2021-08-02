@@ -5,3 +5,4 @@
 1. Login Autentication
 2. Login Authorization
 3. OAuth2 Login
+4. Logout
