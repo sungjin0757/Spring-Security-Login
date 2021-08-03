@@ -28,13 +28,14 @@
                   >
 
         </div>
-        <div>
+        <div >
             <label for="password">비밀번호</label>
-            <input type="password" id="password" th:field="*{password}"
-                   class="form-control"
+            <input type="password"  th:field="*{password}"
+                   class="form-control" th:if="${signupFormDto.password==null}"
                    >
-
+            <input type="hidden" th:field="*{password}" th:if="${signupFormDto.password!=null}">
         </div>
+
         <div>
             <label for="name">이름</label>
             <input type="text" id="name" th:field="*{name}" class="formcontrol" th:readonly="${signupFormDto.name!=null}"

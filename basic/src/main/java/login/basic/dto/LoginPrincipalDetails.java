@@ -23,13 +23,14 @@ public class LoginPrincipalDetails implements UserDetails, OAuth2User {
         this.member=member;
     }
 
-    public LoginPrincipalDetails(Map<String,Object> attributes){
+    public LoginPrincipalDetails(Member member,Map<String,Object> attributes){
+        this.member=member;
         this.attributes=attributes;
     }
 
     @Override
     public String getName() {
-        return attributes.get("sub").toString();
+        return member.getName();
 
     }
 
@@ -53,8 +54,6 @@ public class LoginPrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        if(member==null)
-            return (String)attributes.get("email");
         return member.getEmail();
     }
 

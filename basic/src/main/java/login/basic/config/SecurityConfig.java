@@ -1,5 +1,6 @@
 package login.basic.config;
 
+import login.basic.oauth.OAuth2AuthenticationFailureHandler;
 import login.basic.oauth.service.Oauth2Service;
 import login.basic.service.MemberService;
 import login.basic.service.UserLoginFailHandler;
@@ -24,6 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberService memberService;
     private final Oauth2Service oauth2Service;
     private final UserLoginFailHandler userLoginFailHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,7 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(userLoginFailHandler)
                 .and()
                 .oauth2Login()
-                .loginPage("/loginForm").defaultSuccessUrl("/oauth-join")
+                .loginPage("/loginForm").defaultSuccessUrl("/join")
+                .failureHandler(oAuth2AuthenticationFailureHandler)
                 .userInfoEndpoint()
                 .userService(oauth2Service);
     }

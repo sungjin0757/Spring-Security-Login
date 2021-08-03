@@ -80,9 +80,8 @@ public class MemberController {
     @GetMapping("/test/login")
     @ResponseBody
     public String testLoginFinal(@AuthenticationPrincipal LoginPrincipalDetails user){
-        String email = user.getAttribute("email");
+        String email = user.getUsername();
 
-        log.info(user.getAttributes().toString());
         log.info(email);
         return "oauth";
 
@@ -101,14 +100,25 @@ public class MemberController {
     public String loginFail(@RequestParam String errorMsg,Model model,@ModelAttribute LoginFormDto form){
         log.info(errorMsg);
         model.addAttribute("loginFailMsg",errorMsg);
-        
+
         return "login";
     }
 
     @GetMapping("/join")
-    public String joinForm(Model model){
+    public String joinForm(@AuthenticationPrincipal LoginPrincipalDetails details, Model model){
+        if(details==null){
+            model.addAttribute("signupFormDto",new SignupFormDto());
+        }
+        else {
+            SignupFormDto signupFormDto = new SignupFormDto();
+            signupFormDto.setEmail(details.getUsername());
+            signupFormDto.setPassword(details.getPassword());
+            log.info(details.getPassword());
+            signupFormDto.setName(details.getName());
 
-        model.addAttribute("signupFormDto",new SignupFormDto());
+            model.addAttribute("signupFormDto", signupFormDto);
+        }
+
         return "signup";
     }
 
@@ -131,6 +141,7 @@ public class MemberController {
     @PostMapping("/join")
     public String join(@ModelAttribute SignupFormDto form){
 
+        log.info("join-post = {}",form.getPassword());
         Member member=new Member(form.getEmail(),form.getPassword(),form.getName());
         member.updateRole("ROLE_USER");
         memberService.join(member);
