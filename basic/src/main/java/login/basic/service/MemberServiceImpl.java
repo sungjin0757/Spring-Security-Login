@@ -62,6 +62,7 @@ public class MemberServiceImpl implements MemberService{
 
         log.info(username);
         Member member = findByEmail(username);
+        log.info("password={}",member.getPassword());
         if(member==null){
             throw new UsernameNotFoundException(username);
         }
